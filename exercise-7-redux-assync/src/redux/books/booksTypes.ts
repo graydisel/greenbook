@@ -4,6 +4,7 @@ export interface GoogleBook {
         title: string;
         authors?: string[];
         description?: string;
+        categories?: string[];
         pageCount?: number;
         averageRating?: number;
         imageLinks?: {
@@ -30,4 +31,7 @@ export interface BooksState {
     booksResponse: GoogleBooksResponse | null;
     loading: boolean;
     error: string | null;
+    selectedBook: GoogleBook | null;
+    selectedBookLoading: boolean;
+    selectedBookError: string | null;
 }

@@ -4,6 +4,7 @@ import {mainRoutes, profileRoutes} from "./components/layout/routes.ts";
 import {NotFound} from "./pages/NotFound.tsx";
 import {ErrorBoundary} from "./pages/ErrorBoundary.tsx";
 import {Layout} from "./pages/Layout.tsx";
+import {BookDetails} from "./pages/BookDetails.tsx";
 
 function App() {
     const router = createBrowserRouter([
@@ -13,6 +14,10 @@ function App() {
             element: <Layout/>,
             children: [
                 ...mainRoutes, ...profileRoutes,
+                {
+                    path: "/book/:id",
+                    Component: BookDetails
+                },
                 {
                     path: "*",
                     Component: NotFound
