@@ -3,6 +3,7 @@ import AddShoppingCartTwoToneIcon from '@mui/icons-material/AddShoppingCartTwoTo
 import type {GoogleBook} from "../../redux/books/booksTypes.ts";
 import {Link as RouterLink} from "react-router-dom";
 import {designTokens} from "../../assets/style/variables.ts";
+import {getBookDisplayPrice} from "../../utils/bookPricing.ts";
 
 interface BookCardProps {
     book: GoogleBook;
@@ -10,13 +11,7 @@ interface BookCardProps {
 }
 
 export const BookCard = ({book, onAddBook}: BookCardProps) => {
-    const generatedPrice = ((book.id.charCodeAt(0) + book.id.length) % 21) + 8.99;
-    const shouldShowGeneratedPrice = book.id.charCodeAt(book.id.length - 1) % 2 === 0;
-    const displayPrice = book.saleInfo.listPrice?.amount
-        ? `${book.saleInfo.listPrice.amount.toFixed(2)} $`
-        : shouldShowGeneratedPrice
-            ? `${generatedPrice.toFixed(2)} $`
-            : "Price on request";
+    const displayPrice = getBookDisplayPrice(book);
 
     return (
         <Card sx={{height: '100%', display: 'flex', flexDirection: 'column', borderRadius: designTokens.radius.card}}>

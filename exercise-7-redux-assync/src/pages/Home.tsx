@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     Alert,
@@ -12,7 +12,7 @@ import {
     Typography
 } from "@mui/material";
 import type {AppDispatch} from "../redux/store.ts";
-import {booksSelector, loadedBooksSelector} from "../redux/books/booksSelectors.ts";
+import {booksSelector, selectFeaturedBooks} from "../redux/books/booksSelectors.ts";
 import {fetchBooks} from "../redux/books/booksSlice.ts";
 import {BookCard} from "../components/common/BookCard.tsx";
 import {addToCart} from "../redux/bookCart/bookCartSlice.ts";
@@ -28,19 +28,30 @@ const genreFilters = [
 
 export const Home = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const books = useSelector(loadedBooksSelector) ?? [];
+    const featuredBooks = useSelector(selectFeaturedBooks);
     const {loading, error} = useSelector(booksSelector);
     const [activeGenreQuery, setActiveGenreQuery] = useState(genreFilters[0].query);
 
     useEffect(() => {
-        dispatch(fetchBooks({quantity: 18, query: activeGenreQuery, orderBy: "relevance"}));
+        const controller = new AbortController();
+        
+        const fetchData = async () => {
+            try {
+                await dispatch(fetchBooks({
+                    quantity: 18, 
+                    query: activeGenreQuery, 
+                    orderBy: "relevance"
+                }));
+            } catch (e) {
+                console.error("Initial fetch failed", e);
+            }
+        };
+    
+        fetchData();
+    
+        return () => controller.abort();
     }, [activeGenreQuery, dispatch]);
 
-    const featuredBooks = useMemo(() => {
-        return [...books]
-            .sort((a, b) => (b.volumeInfo.averageRating ?? 0) - (a.volumeInfo.averageRating ?? 0))
-            .slice(0, 6);
-    }, [books]);
 
     const handleAddBook = (book: GoogleBook) => {
         dispatch(addToCart(book));
@@ -51,23 +62,18 @@ export const Home = () => {
             <Box
                 sx={{
                     borderRadius: designTokens.radius.hero,
+                    minHeight: 280,
                     p: {xs: 3, md: 6},
-                    background: designTokens.gradient.homeHero,
+                    background: "url('/home/BANNER.png') no-repeat center center / cover",
                     color: designTokens.color.heroText,
                     display: "flex",
-                    flexDirection: "column",
+                    flexDirection: "column-reverse",
                     gap: 2,
                 }}
             >
-                <Typography variant="h3" sx={{fontWeight: 700}}>
-                    Найди свою следующую историю
-                </Typography>
-                <Typography variant="body1" sx={{maxWidth: 520}}>
-                    Подборки бестселлеров, художественная литература и научно-популярные книги в одном месте.
-                </Typography>
                 <Box>
                     <Button component={RouterLink} to="/books" variant="contained" color="warning">
-                        Смотреть каталог
+                        Watch a catalog
                     </Button>
                 </Box>
             </Box>

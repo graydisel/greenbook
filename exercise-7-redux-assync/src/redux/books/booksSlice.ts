@@ -23,16 +23,19 @@ const getErrorMessage = (error: unknown): string => {
 
 const buildBooksUrl = ({quantity, query = "subject:fiction", orderBy = "relevance"}: FetchBooksArgs): string => {
     const apiKey = import.meta.env.VITE_BOOK_API_KEY;
+    const safeQuery = query.includes('subject:') ? query : `intitle:${query}`;
     const params = new URLSearchParams({
-        q: query,
+        q: safeQuery,
         orderBy,
         country: "US",
         maxResults: String(Math.min(quantity, 40)),
+        printType: "books",
     });
 
     if (apiKey) {
         params.set("key", apiKey);
     }
+
 
     return `https://www.googleapis.com/books/v1/volumes?${params.toString()}`;
 };

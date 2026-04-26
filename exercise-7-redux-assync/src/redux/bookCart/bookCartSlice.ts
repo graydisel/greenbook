@@ -1,13 +1,19 @@
 import {createSlice, type PayloadAction} from "@reduxjs/toolkit";
 import type {BookCartState, BookCartType} from "./bookCartTypes.ts";
 import type {GoogleBook} from "../books/booksTypes.ts";
+import {ensureBookHasDisplayPrice} from "../../utils/bookPricing.ts";
 
-const KEY = "greenbook_cart";
+export const CART_STORAGE_KEY = import.meta.env.VITE_LOCAL_STORAGE_KEY;
 
 const loadCart = (): BookCartType[] => {
     try {
-        const data = localStorage.getItem(KEY);
-        return data ? JSON.parse(data) : [];
+        const data = localStorage.getItem(CART_STORAGE_KEY);
+        if (!data) {
+            return [];
+        }
+
+        const parsedCart = JSON.parse(data) as BookCartType[];
+        return parsedCart.map((book) => ensureBookHasDisplayPrice(book));
     } catch (e) {
         console.error(e);
         return [];
@@ -23,12 +29,13 @@ const bookCartSlice = createSlice({
     initialState,
     reducers: {
         addToCart: (state, action: PayloadAction<GoogleBook>) => {
-            const searchBook = state.booksCart.find(book => book.id === action.payload.id);
+            const normalizedBook = ensureBookHasDisplayPrice(action.payload);
+            const searchBook = state.booksCart.find(book => book.id === normalizedBook.id);
             if (searchBook) {
                 searchBook.quantity++;
             } else {
                 const newBook = {
-                ...action.payload,
+                ...normalizedBook,
                 quantity: 1,};
                 state.booksCart.push(newBook);
             }
