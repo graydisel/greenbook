@@ -80,7 +80,7 @@ export const Home = () => {
 
             <Box sx={{display: "flex", flexDirection: "column", gap: 1}}>
                 <Typography variant="h5" sx={{fontWeight: 600}}>
-                    Жанры
+                    Genres
                 </Typography>
                 <Stack direction="row" spacing={1} sx={{flexWrap: "wrap"}}>
                     {genreFilters.map((genre) => (

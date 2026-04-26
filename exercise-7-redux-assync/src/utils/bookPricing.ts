@@ -6,16 +6,8 @@ const getGeneratedPriceValue = (bookId: string): number => {
     return Number((((bookId.charCodeAt(0) + bookId.length) % 21) + 8.99).toFixed(2));
 };
 
-const shouldGeneratePrice = (bookId: string): boolean => {
-    return bookId.charCodeAt(bookId.length - 1) % 2 === 0;
-};
-
 export const ensureBookHasDisplayPrice = <T extends GoogleBook>(book: T): T => {
     if (book.saleInfo.listPrice?.amount) {
-        return book;
-    }
-
-    if (!shouldGeneratePrice(book.id)) {
         return book;
     }
 
@@ -33,11 +25,7 @@ export const ensureBookHasDisplayPrice = <T extends GoogleBook>(book: T): T => {
 
 export const getBookDisplayPrice = (book: GoogleBook): string => {
     const withPrice = ensureBookHasDisplayPrice(book);
-    const amount = withPrice.saleInfo.listPrice?.amount;
-
-    if (!amount) {
-        return "Price on request";
-    }
+    const amount = withPrice.saleInfo.listPrice?.amount ?? getGeneratedPriceValue(book.id);
 
     return `${amount.toFixed(2)} $`;
 };

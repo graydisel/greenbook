@@ -2,11 +2,13 @@ import {configureStore} from "@reduxjs/toolkit";
 import bookCartSlice from "./bookCart/bookCartSlice.ts";
 import booksSlice from "./books/booksSlice.ts";
 import { CART_STORAGE_KEY } from "./bookCart/bookCartSlice.ts";
+import notificationSlice from "./notification/notificationSlice.ts";
 
 export const store = configureStore({
     reducer: {
         books: booksSlice,
         cart: bookCartSlice,
+        notification: notificationSlice,
     }
 });
 store.subscribe(() => {

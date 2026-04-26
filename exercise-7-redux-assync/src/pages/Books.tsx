@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import {Link as RouterLink} from "react-router-dom";
 import {designTokens} from "../assets/style/variables.ts";
+import {addNotification} from "../redux/notification/notificationSlice.ts";
 
 const genreFilters = [
     {label: "Fiction", query: "subject:fiction"},
@@ -39,6 +40,13 @@ export const Books = () => {
 
     function handleAddBook(book: GoogleBook) {
         dispatch(addToCart(book))
+        dispatch(
+            addNotification({
+                message: `"${book.volumeInfo.title}" added to cart`,
+                severity: "success",
+                autoHideDuration: 2500,
+            })
+        );
     }
 
     return (
@@ -52,19 +60,19 @@ export const Books = () => {
                 }}
             >
                 <Typography variant="h4" sx={{fontWeight: 700, mb: 1}}>
-                    Каталог книг
+                    Books Catalog
                 </Typography>
                 <Typography variant="body1" sx={{maxWidth: 600, opacity: 0.9}}>
-                    Выберите жанр и добавляйте интересные книги в корзину.
+                    Choose a genre and add interesting books to your cart.
                 </Typography>
                 <Button component={RouterLink} to="/" variant="outlined" color="inherit" sx={{mt: 2}}>
-                    На главную
+                    Back to home
                 </Button>
             </Box>
 
             <Box sx={{display: "flex", flexDirection: "column", gap: 1}}>
                 <Typography variant="h6" sx={{fontWeight: 600}}>
-                    Быстрые фильтры
+                    Quick filters
                 </Typography>
                 <Stack direction="row" spacing={1} sx={{flexWrap: "wrap"}}>
                     {genreFilters.map((genre) => (
@@ -121,7 +129,7 @@ export const Books = () => {
             {!loading && !error && books.length > 0 && (
                 <Box>
                     <Typography variant="body2" color="text.secondary" sx={{mb: 2}}>
-                        Найдено книг: {books.length}
+                        Found books: {books.length}
                     </Typography>
                     <Grid container spacing={2}>
                         {books.map((book) => (

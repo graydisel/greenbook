@@ -23,6 +23,8 @@ import {
 import {fetchBookById} from "../redux/books/booksSlice.ts";
 import {addToCart} from "../redux/bookCart/bookCartSlice.ts";
 import {designTokens} from "../assets/style/variables.ts";
+import { addNotification } from "../redux/notification/notificationSlice.ts";
+import type { GoogleBook } from "../redux/books/booksTypes.ts";
 
 export const BookDetails = () => {
     const {id} = useParams();
@@ -34,6 +36,17 @@ export const BookDetails = () => {
 
     const localBook = useMemo(() => loadedBooks.find((book) => book.id === id), [loadedBooks, id]);
     const book = selectedBook?.id === id ? selectedBook : localBook;
+
+    function handleAddBook(book: GoogleBook) {
+        dispatch(addToCart(book))
+        dispatch(
+            addNotification({
+                message: `"${book.volumeInfo.title}" added to cart`,
+                severity: "success",
+                autoHideDuration: 2500,
+            })
+        );
+    }
 
     useEffect(() => {
         if (id) {
@@ -115,10 +128,11 @@ export const BookDetails = () => {
                         />
                         <Button
                             variant="contained"
-                            onClick={() => dispatch(addToCart(book))}
+                            color="success"
+                            onClick={() => handleAddBook(book)}
                             startIcon={<AddShoppingCartTwoToneIcon/>}
                         >
-                            Добавить в корзину
+                            Add to cart
                         </Button>
                     </Box>
                 </Stack>

@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import EnergySavingsLeafIcon from '@mui/icons-material/EnergySavingsLeaf';
 import MenuIcon from '@mui/icons-material/Menu';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import * as React from "react";
 import {mainRoutes, profileRoutes} from "./routes.ts";
 import {Link} from "react-router-dom";
@@ -131,9 +132,9 @@ export const Header = () => {
                         ))}
                     </Box>
                     <Box sx={{flexGrow: 0}}>
-                        <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg"/>
+                        <Tooltip title="Account">
+                            <IconButton size="large" color="inherit" onClick={handleOpenUserMenu} sx={{p: 0}}>
+                                <AccountCircle fontSize="large" />
                             </IconButton>
                         </Tooltip>
                         <Menu

@@ -53,7 +53,10 @@ const bookCartSlice = createSlice({
             const searchBook = state.booksCart.find(book => book.id === action.payload);
             if (searchBook && searchBook.quantity > 1) {
                 searchBook.quantity--;
+            } else {
+                state.booksCart = state.booksCart.filter((book) => book.id !== action.payload);
             }
+        
         },
         clearCart: (state) => {
             state.booksCart = [];
