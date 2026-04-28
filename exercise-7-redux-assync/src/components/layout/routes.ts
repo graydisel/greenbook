@@ -9,27 +9,27 @@ export const mainRoutes = [
         path: '',
         Component: Home,
         label: 'Home',
+        handle: {title: 'Home'}
     },
     {
         title: 'Books',
         path: "/books",
-        Component: Books
-    }
+        Component: Books,
+        handle: {title: 'Books'}
+    },
 ]
 
 export const profileRoutes = [
     {
-        title: 'Profile',
-        path: '/profile',
-    },
-    {
         title: 'Cart',
         path: '/cart',
-        Component: Cart
+        Component: Cart,
+        handle: {title: 'Cart'}
     },
     {
         title: 'Checkout',
         path: "/checkout",
-        Component: Checkout
+        Component: Checkout,
+        handle: {title: 'Checkout'}
     }
 ]

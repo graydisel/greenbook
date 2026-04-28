@@ -60,7 +60,7 @@ export const BookCardCart = ({bookInfo, increaseQuantity, decreaseQuantity, remo
                             sx={{backgroundColor: "rgba(40, 104, 67, 0.08)", color: mainColor}}
                         />
                         <Chip
-                            label={`Qty: ${bookInfo.quantity}`}
+                            label={`Quantity: ${bookInfo.quantity}`}
                             size="small"
                             sx={{backgroundColor: "rgba(40, 104, 67, 0.08)", color: mainColor}}
                         />

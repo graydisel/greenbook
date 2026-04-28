@@ -19,22 +19,22 @@ import {
     TextField,
     Typography
 } from "@mui/material";
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import GoogleIcon from '@mui/icons-material/Google';
+import PaymentsIcon from '@mui/icons-material/Payments';
 import {mainColor} from "../assets/style/variables.ts";
 import {addNotification} from "../redux/notification/notificationSlice.ts";
-
-export type CheckoutInputs = {
-    nameRequired: string,
-    emailRequired: string,
-    addressRequired: string,
-    payment: string
-}
+import {checkoutSchema, type CheckoutInputs} from "../schemas/checkoutSchema.ts";
+import {zodResolver} from "@hookform/resolvers/zod";
 
 export const Checkout = () => {
     const booksInCart = useSelector(booksListSelector);
     const totalPrice = useSelector(totalPriceSelector);
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
-    const { register, handleSubmit, formState: { errors } } = useForm<CheckoutInputs>();
+    const {register, handleSubmit, formState: {errors}} = useForm<CheckoutInputs>({
+        resolver: zodResolver(checkoutSchema),
+    });
     const onSubmit: SubmitHandler<CheckoutInputs> = (data) => {
         console.log(data);
         dispatch(clearCart());
@@ -106,36 +106,53 @@ export const Checkout = () => {
                             Delivery information
                         </Typography>
 
-                        <TextField type={"text"} {...register("nameRequired", {required: true, maxLength: 20})}
-                                   required id="name" label="Full Name" error={errors.nameRequired && true}
-                                   helperText={errors.nameRequired && "Name should be filled in."}
+                        <TextField type={"text"} {...register("nameRequired")}
+                                   id="name" label="Full Name" error={!!errors.nameRequired}
+                                   helperText={errors.nameRequired?.message}
                                    fullWidth
                         />
-                        <TextField type={"email"} {...register("emailRequired", {required: true, maxLength: 20})}
-                                   required id="email" label="Email" error={errors.emailRequired && true}
-                                   helperText={errors.emailRequired && "Email should be filled in."}
+                        <TextField type={"email"} {...register("emailRequired")}
+                                   id="email" label="Email" error={!!errors.emailRequired}
+                                   helperText={errors.emailRequired?.message}
                                    fullWidth
                         />
 
-                        <TextField type={"text"} {...register("addressRequired", {required: true, maxLength: 30})}
-                                   required id="address" label="Adress" error={errors.addressRequired && true}
-                                   helperText={errors.addressRequired && "Address should be filled in."}
+                        <TextField type={"text"} {...register("addressRequired")}
+                                   id="address" label="Adress" error={!!errors.addressRequired}
+                                   helperText={errors.addressRequired?.message}
                                    fullWidth
                         />
 
                         <Divider/>
 
                         <FormLabel id="payment" sx={{color: mainColor, fontWeight: 600}}>Payment method</FormLabel>
-                        <RadioGroup {...register("payment")}
+                        <RadioGroup
                             defaultValue=""
                             aria-labelledby="payment"
                             name="payment"
                         >
-                            <FormControlLabel value="card" control={<Radio/>} label="By Card" />
-                            <FormControlLabel value="googlePay" control={<Radio/>} label="GooglePay" />
-                            <FormControlLabel value="cashOnReceive" control={<Radio/>} label="By Cash on receive" />
+                            <FormControlLabel 
+                                value="card" 
+                                control={<Radio/>} 
+                                {...register("payment")} 
+                                label={<>By Card <CreditCardIcon /></>} 
+                            />
+
+                            <FormControlLabel 
+                                value="googlePay" 
+                                control={<Radio/>} 
+                                {...register("payment")} 
+                                label={<>GooglePay <GoogleIcon /></>} 
+                            />
+                            
+                            <FormControlLabel 
+                                value="cashOnReceive" 
+                                control={<Radio/>} 
+                                {...register("payment")} 
+                                label={<>By Cash on receive <PaymentsIcon /></>} 
+                            />
                         </RadioGroup>
-                        {errors.payment && (<span className="error">Payment should be filled in</span>)}
+                        {errors.payment && (<Typography variant="body2" color="error">{errors.payment.message}</Typography>)}
 
                         <Button
                             type={"submit"}

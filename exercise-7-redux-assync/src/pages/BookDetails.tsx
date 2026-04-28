@@ -98,6 +98,7 @@ export const BookDetails = () => {
                         src={book.volumeInfo.imageLinks?.thumbnail ?? book.volumeInfo.imageLinks?.smallThumbnail}
                         alt={book.volumeInfo.title}
                         sx={{
+                            alignSelf: { xs: "center", md: "flex-start" },
                             width: {xs: "100%", md: 320},
                             maxWidth: 320,
                             maxHeight: 460,
@@ -115,7 +116,7 @@ export const BookDetails = () => {
                         <Typography variant="subtitle1" color="text.secondary" sx={{mb: 2}}>
                             {book.volumeInfo.authors?.join(", ") ?? "Unknown author"}
                         </Typography>
-                        <Stack direction="row" spacing={1} sx={{mb: 2, flexWrap: "wrap"}}>
+                        <Stack direction="row" spacing={1} sx={{mb: 2, flexWrap: "wrap", gap: "10px"}}>
                             {(book.volumeInfo.categories ?? ["General"]).map((category) => (
                                 <Chip key={category} label={category} size="small" />
                             ))}

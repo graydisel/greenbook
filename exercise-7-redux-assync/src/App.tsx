@@ -4,7 +4,7 @@ import {mainRoutes, profileRoutes} from "./components/layout/routes.ts";
 import {NotFound} from "./pages/NotFound.tsx";
 import {ErrorBoundary} from "./pages/ErrorBoundary.tsx";
 import {Layout} from "./pages/Layout.tsx";
-import {BookDetails} from "./pages/BookDetails.tsx";
+import { BookDetails } from './pages/BookDetails.tsx';
 
 function App() {
     const router = createBrowserRouter([
@@ -16,7 +16,8 @@ function App() {
                 ...mainRoutes, ...profileRoutes,
                 {
                     path: "/book/:id",
-                    Component: BookDetails
+                    Component: BookDetails,
+                    handle: {title: 'Book Details'}
                 },
                 {
                     path: "*",
