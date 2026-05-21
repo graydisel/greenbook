@@ -19,6 +19,7 @@ import {addToCart} from "../redux/bookCart/bookCartSlice.ts";
 import type {GoogleBook} from "../redux/books/booksTypes.ts";
 import {Link as RouterLink} from "react-router-dom";
 import {designTokens} from "../assets/style/variables.ts";
+import { addNotification } from "../redux/notification/notificationSlice.ts";
 
 const genreFilters = [
     {label: "Fiction", query: "subject:fiction"},
@@ -54,7 +55,14 @@ export const Home = () => {
 
 
     const handleAddBook = (book: GoogleBook) => {
-        dispatch(addToCart(book));
+        dispatch(addToCart(book))
+        dispatch(
+            addNotification({
+                message: `"${book.volumeInfo.title}" added to cart`,
+                severity: "success",
+                autoHideDuration: 2500,
+            })
+        );
     };
 
     return (
